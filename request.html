@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>요청하기</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #a0a0a0, #6e6e6e);
+            text-align: center;
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #555;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            border-radius: 50px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin: 10px auto;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+        .back-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            background-color: #555;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #333;
+            transform: scale(1.1);
+        }
+
+        .small-note {
+            margin-top: 20px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+            margin-right: 50px;
+        }
+
+        .navbar .menu a {
+            color: #000;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .navbar .menu a:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <a href="index.html" class="logo">
+            <img src="image/logo.jpg" alt="사이트 로고">
+            <span>Y-SPACE 도우미</span>
+        </a>
+        <div class="menu">
+            <a href="find_item.html">물건 찾기</a>
+            <a href="view_map.html">지도 보기</a>
+            <a href="use_ar.html">AR 기능 사용하기</a>
+            <a href="request.html">요청하기</a>
+        </div>
+    </div>
+
+    <h1>요청하기</h1>
+    <div class="form-container">
+        <div class="form-group">
+            <label for="email">이메일 주소</label>
+            <input type="email" id="email" placeholder="이메일을 입력하세요" required>
+        </div>
+        <div class="form-group">
+            <label for="message">요청 내용</label>
+            <textarea id="message" placeholder="요청할 내용을 입력하세요" required></textarea>
+        </div>
+        <button onclick="sendEmail()">메일 보내기</button>
+    </div>
+    <button class="back-button" onclick="location.href='find_item.html'">뒤로 가기</button>
+    <div class="small-note">
+        혹은 <span style="text-decoration: underline;">egehve6262@gmail.com</span> 으로 요청해주세요
+    </div>
+
+    <script>
+        function sendEmail() {
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            if (!email || !message) {
+                alert("이메일과 요청 내용을 모두 입력해주세요.");
+                return;
+            }
+
+            const subject = encodeURIComponent("Y-SPACE 도우미 요청 사항");
+            const body = encodeURIComponent(`요청자 이메일: ${email}\n\n요청 내용:\n${message}`);
+
+            window.location.href = `mailto:egehve6262@gmail.com?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+
+</html>

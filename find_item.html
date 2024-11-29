@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>물건 찾기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #a9a9a9;
+            background-image:
+                radial-gradient(circle, #D3D3D3 2px, transparent 2px),
+                linear-gradient(135deg, #a9a9a9, #696969);
+            background-size: 60px 1px, 100% 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .results {
+            width: 100%;
+            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .results::-webkit-scrollbar {
+            display: none;
+        }
+
+
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+            color: #000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar .menu {
+            display: flex;
+            gap: 20px;
+            margin-right: 50px;
+        }
+
+        .navbar .menu a {
+            color: #000;
+            text-decoration: none;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .navbar .menu a:hover {
+            background: rgba(0, 0, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            background-color: #555;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: #333;
+            transform: scale(1.1);
+        }
+
+        .search-container {
+            width: 80%;
+            max-width: 500px;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 100px);
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px 0 0 50px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 0 50px 50px 0;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+
+
+
+        .results div {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 15px;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            font-size: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .image-button {
+            padding: 5px 15px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 20px;
+            background-color: #FF6347;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .image-button:hover {
+            background-color: #FF4500;
+            transform: scale(1.1);
+        }
+
+        .image-container {
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+        }
+
+        .request-button {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .request-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navbar">
+        <a href="index.html" class="logo">
+            <img src="image/logo.jpg" alt="사이트 로고">
+            <span>Y-SPACE 도우미</span>
+        </a>
+        <div class="menu">
+            <a href="find_item.html">물건 찾기</a>
+            <a href="view_map.html">지도 보기</a>
+            <a href="use_ar.html">AR 기능 사용하기</a>
+            <a href="request.html">요청하기</a>
+        </div>
+    </div>
+
+    <button class="back-button" onclick="location.href='index.html'">뒤로 가기</button>
+    <h1>물건 찾기</h1>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="물건 이름을 입력하세요">
+        <button onclick="searchItem()">검색</button>
+    </div>
+    <div class="results" id="results"></div>
+    <div class="image-container" id="imageContainer"></div>
+    <button class="request-button" onclick="location.href='request.html'">추가 요청하기</button>
+
+    <script>
+        const items = [
+            {name: "줄자", location: "창작미디어실", image: "tape_measure.jpg"},
+            {name: "일자드라이버", location: "창작미디어실", image: "image/flathead_screwdriver.jpg"},
+            {name: "십자드라이버", location: "창작미디어실", image: "image/philips_screwdriver.jpg"},
+            {name: "실톱", location: "창작미디어실", image: "hand_saw.jpg"},
+            {name: "활톱", location: "창작미디어실", image: "image/hacksaw.jpg"},
+            {name: "양날톱", location: "창작미디어실", image: "two_edge_saw.jpg"},
+            {name: "나무망치", location: "창작미디어실", image: "image/wooden_mallet.jpg"},
+            {name: "망치", location: "창작미디어실", image: "image/hammer.jpg"},
+            {name: "고무망치", location: "창작미디어실", image: "image/rubber_mallet.jpg"},
+            {name: "조각용망치", location: "창작미디어실", image: "image/carving_mallet.jpg"},
+            {name: "조각끌", location: "창작미디어실", image: "image/chisel.jpg"},
+            {name: "니퍼", location: "창작미디어실", image: "image/nipper.jpg"},
+            {name: "펜치", location: "창작미디어실", image: "image/pliers.jpg"},
+            {name: "롱노즈 펜치", location: "창작미디어실", image: "long_nose_pliers.jpg"},
+            {name: "와이어스트리퍼", location: "창작미디어실", image: "image/wire_stripper.jpg"},
+            {name: "자", location: "창작미디어실", image: "ruler.jpg"},
+            {name: "육각렌치", location: "창작미디어실", image: "image/hex_wrench.jpg"},
+            {name: "커터칼", location: "창작미디어실", image: "cutter_knife.jpg"},
+            {name: "클램프", location: "창작미디어실", image: "image/clamp.jpg"},
+            {name: "나사", location: "창작미디어실", image: "screw.jpg"},
+            {name: "못", location: "창작미디어실", image: "nail.jpg"},
+            {name: "전동드라이버", location: "창작미디어실", image: "electric_screwdriver.jpg"},
+            {name: "띠톱기", location: "창작미디어실", image: "band_saw.jpg"},
+            {name: "밴드소잉머신", location: "창작미디어실", image: "band_sawing_machine.jpg"},
+            {name: "각도 절단기", location: "창작미디어실", image: "miter_saw.jpg"},
+            {name: "집진기", location: "창작미디어실", image: "dust_collector.jpg"},
+            {name: "원형톱", location: "창작미디어실", image: "circular_saw.jpg"},
+            {name: "밸트샌더", location: "창작미디어실", image: "belt_sander.jpg"},
+            {name: "사포", location: "창작미디어실", image: "sandpaper.jpg"},
+            {name: "블로워", location: "창작미디어실", image: "blower.jpg"},
+            {name: "목장갑", location: "창작미디어실", image: "image/work_gloves.jpg"},
+            {name: "납뗌기", location: "창작미디어실", image: "soldering_remover.jpg"},
+            {name: "인두기", location: "창작미디어실", image: "soldering_iron.jpg"},
+            {name: "열풍기", location: "창작미디어실", image: "heat_gun.jpg"},
+            {name: "드라이기", location: "전산정보실", image: "hair_dryer.jpg"},
+            {name: "필라멘트", location: "전산정보실", image: "filament.jpg"},
+            {name: "아두이노 세트", location: "전산정보실", image: "arduino_set.jpg"},
+            {name: "마이크로비트 세트", location: "전산정보실", image: "microbit_set.jpg"},
+            {name: "아두이노 가이드북", location: "전산정보실", image: "arduino_guide.jpg"},
+            {name: "마이크로비트 가이드북", location: "전산정보실", image: "microbit_guide.jpg"},
+            {name: "3D펜", location: "전산정보실", image: "3d_pen.jpg"},
+            {name: "멀티탭", location: "전산정보실", image: "power_strip.jpg"},
+            {name: "키보드", location: "전산정보실", image: "keyboard.jpg"},
+            {name: "솜사탕기계", location: "전산정보실", image: "cotton_candy_machine.jpg"},
+            {name: "글루건", location: "전산정보실", image: "glue_gun.jpg"},
+            {name: "레이저커팅기", location: "레이저커팅실", image: "laser_cutter.jpg"},
+            {name: "대형 3D프린터", location: "레이저커팅실", image: "large_3d_printer.jpg"},
+            {name: "RC비행기", location: "레이저커팅실", image: "rc_plane.jpg"},
+            {name: "나무판자", location: "레이저커팅실", image: "wooden_board.jpg"},
+            {name: "아크릴판", location: "레이저커팅실", image: "acrylic_board.jpg"},
+            {name: "마우스", location: "Y-SPACE교실1", image: "mouse.jpg"},
+            {name: "마우스패드", location: "Y-SPACE교실1", image: "mouse_pad.jpg"},
+            {name: "usb멀티허브", location: "Y-SPACE교실1", image: "usb_hub.jpg"},
+            {name: "usb", location: "Y-SPACE교실1", image: "usb_drive.jpg"},
+            {name: "텔로 드론", location: "Y-SPACE교실1", image: "tello_drone.jpg"},
+            {name: "diy 드론", location: "Y-SPACE교실1", image: "diy_drone.jpg"},
+            {name: "레이싱 드론", location: "Y-SPACE교실1", image: "racing_drone.jpg"},
+            {name: "FPV 드론", location: "Y-SPACE교실1", image: "fpv_drone.jpg"},
+            {name: "정보 책", location: "Y-SPACE교실1", image: "info_book.jpg"},
+            {name: "노트북 충전기", location: "Y-SPACE교실1", image: "laptop_charger.jpg"},
+            {name: "아두이노 세트", location: "Y-SPACE교실1", image: "arduino_set.jpg"},
+            {name: "마이크로비트 세트", location: "Y-SPACE교실1", image: "microbit_set.jpg"},
+            {name: "소형 3D프린터", location: "Y-SPACE교실1", image: "small_3d_printer.jpg"},
+            {name: "소형 3D프린터", location: "Y-SPACE교실2", image: "small_3d_printer.jpg"},
+            {name: "풀", location: "Y-SPACE교실2", image: "glue.jpg"},
+            {name: "커터칼", location: "Y-SPACE교실2", image: "cutter_knife.jpg"},
+            {name: "물로켓", location: "Y-SPACE교실2", image: "water_rocket.jpg"},
+            {name: "미니카", location: "Y-SPACE교실2", image: "mini_car.jpg"},
+            {name: "드론", location: "Y-SPACE교실2", image: "drone.jpg"},
+            {name: "배터리", location: "Y-SPACE교실2", image: "battery.jpg"},
+            {name: "건전지", location: "Y-SPACE교실2", image: "cell_battery.jpg"},
+            {name: "아두이노 모듈", location: "Y-SPACE교실2", image: "arduino_module.jpg"}
+        ];
+
+        function searchItem() {
+            const input = document.getElementById("searchInput").value.toLowerCase();
+            const resultsContainer = document.getElementById("results");
+            const imageContainer = document.getElementById("imageContainer");
+
+            resultsContainer.innerHTML = "";
+            imageContainer.innerHTML = "";
+
+            const filteredItems = items.filter(item => item.name.includes(input));
+            if (filteredItems.length > 0) {
+                filteredItems.forEach(item => {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.textContent = `${item.name} - 위치: ${item.location}`;
+
+                    const showImageButton = document.createElement("button");
+                    showImageButton.textContent = "이미지 보기";
+                    showImageButton.classList.add("image-button");
+                    showImageButton.onclick = () => displayImage(item.image);
+
+                    itemDiv.appendChild(showImageButton);
+                    resultsContainer.appendChild(itemDiv);
+                });
+            } else {
+                resultsContainer.textContent = "검색 결과가 없습니다.";
+            }
+        }
+
+        function displayImage(imagePath) {
+            const imageContainer = document.getElementById("imageContainer");
+            imageContainer.innerHTML = "";
+
+            const img = document.createElement("img");
+            img.src = imagePath;
+            img.alt = "검색된 이미지";
+            imageContainer.appendChild(img);
+        }
+    </script>
+</body>
+
+</html>
